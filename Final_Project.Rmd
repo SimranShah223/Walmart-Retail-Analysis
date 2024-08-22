@@ -1,0 +1,410 @@
+---
+title: "Final_Project"
+output: html_document
+date: "2023-03-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(corrplot)
+library(dplyr)
+```
+## Dataset Link
+Dataset: https://www.kaggle.com/datasets/datascientistanna/customers-dataset
+Dataset features:
+• 2000 rows
+• 10 variables
+• Quantitative variables: Annual income, Age
+• Categorical variables: Gender, Profession
+
+
+## Dataset Observation Representation
+Each observation in the dataset represents the customer’s characteristics for
+membership in the shop. Here the analysis is done for the most common
+characters customer contains for membership.
+
+
+## Dataset Variable Representation
+Variables characteristics:
+1. Customer ID: ID given to the customers.
+
+2. Gender: The gender of the customer
+
+3. Age: The age of the customer
+
+4. Age_numeric: Age classification based on >50 and <=50 (Newly Added)
+
+5. Annual Income: Income of the customer on an annual basis
+
+6. Spending Score: scores of the customer given by the shop to the customer
+on certain points.
+
+7. Profession: the profession of the customer.
+
+8. Profession_numeric: Profession divided into numeric numbers. (Newly
+Added)
+
+9. Work Experience: work experience of the customer (in years).
+
+10. Family Size: The family size of the customers.
+
+
+## Dataset Motive
+The Dataset contains all the types of customer characteristics. These
+characteristics help data analysts better describe the relationship between getting products from the shop. Better visualization of the characteristics of the customer will help in more marketing in that area. This marketing is then helpful in suggesting people on different social media holding such features. Customers will be more likely to come to shop and get products.
+```{r}
+getwd()
+```
+
+## DataSet
+```{r}
+customers <- read.csv("Customers.csv")
+view(customers)
+```
+
+## Number of columns and rows in the dataset from str()
+```{r}
+str(customers)
+```
+
+## Summary of the Dataset using Summary() Function
+```{r}
+summary(customers)
+```
+
+## Exploratory Data Analysis
+The imaginary Shop dataset contains Several variables. These variables
+are counted in increasing the number of customers. Using exploratory
+Data analysis, some insights are been taken out. This insight shows
+customers’ characteristics and their way of buying the products.
+
+## Scatter Plot
+1st Scatterplot graph shows the relationship between family Size Vs
+spending score on basis of Gender.
+```{r}
+ggplot(customers,
+       aes(FamilySize, 
+           SpendingScore, 
+           color = Gender)) + 
+  geom_point(fill ="turquoise2", size = 2)
+ggsave('P1.png')
+```
+Based on the scatter plot, we can see that there is a relationship between Family Size and Spending Score, with a moderate positive correlation between the two variables.
+
+We can also see that the data is split by gender, with male observations represented by blue points and female observations represented by orange points. Looking at the clusters of points, we can see that female observations tend to have a higher Spending Score than male observations for the same Family Size. This means that, on average, females tend to spend more than males with the same family size.
+
+Additionally, we can see that there are several clusters of observations for each gender, indicating that there may be distinct subgroups within the data. For example, for both males and females, there is a cluster of observations with low Family Size and low Spending Scores, indicating that there are many individuals or families with low spending habits. Similarly, there are clusters of observations with high Family Sizes and high Spending Scores, indicating that there are some individuals or families with high spending habits.
+
+Overall, this scatters plot suggests that Family Size and Spending Score are related, and that gender may also play a role in spending habits. 
+
+
+
+
+
+2nd Scatterplot graph shows the relationship between Age Vs work
+experience on basis of profession.
+```{r}
+ggplot(customers,
+       aes(Age, WorkExperience,
+           color = Profession)) + 
+  geom_point(fill= "palegreen1")
+ggsave('p2.png')
+```
+Based on the scatter plot, we can see that there is a positive correlation between age and work experience, which means that as age increases, work experience tends to increase as well. This relationship holds true for all professions represented in the graph. However, we can also see that there is a significant amount of variation in the data, indicating that there are individuals in each profession with varying levels of work experience at any given age.
+
+We can also see that the data is separated by profession, with different colors representing different professions. Looking at the clusters of points, we can see that certain professions tend to have higher work experience levels for the same age compared to others. For example, the purple points representing engineers tend to have higher work experience levels for the same age compared to the blue points representing healthcare professionals.
+
+Overall, this scatters plot provides insight into the relationship between age and work experience for different professions.
+
+
+
+
+3rd Scatterplot graph shows the relationship between spending score Vs
+Annual Income on basis of profession.
+```{r}
+ggplot(customers,
+       aes(SpendingScore, AnnualIncome,
+           color = Profession)) + 
+  geom_point(fill= "skyblue1")
+ggsave('p3.png')
+```
+We can see that there is no clear relationship between annual income and spending score for any profession. Instead, the data appears to be clustered into distinct groups, indicating that there are different types of customers with varying spending habits and income levels.
+
+Looking at the data, we can see that there are three main clusters of data points: one at the top of the graph, one in the middle, and one at the bottom. The top cluster represents customers with high annual incomes and high spending scores, indicating that they have the financial means to spend more. The middle cluster represents customers with moderate annual incomes and moderate spending scores, while the bottom cluster represents customers with lower annual incomes and lower spending scores.
+
+We can also see that different professions are represented in each cluster, with some professions being over represented in certain clusters. For example, the blue points representing healthcare professionals are primarily clustered in the middle group, while the purple points representing engineers are primarily clustered in the top group.
+
+
+
+## Box Plot
+1st Boxplot graph shows the relationship between Annual Income Vs
+Profession.
+```{r}
+ggplot(customers,
+       aes(AnnualIncome, 
+           Profession)) + 
+  geom_boxplot(fill= "thistle2")
+ggsave('p4.png')
+```
+From the plot, we can see that the median annual income for doctors, engineers, executives, and lawyers is higher than other professions. The median annual income for artists, entertainment, healthcare, homemakers, and marketing is relatively lower. The no profession category has the lowest median annual income.
+
+We can also see that the range of annual income is wider for executive, lawyer, and doctor professions, indicating that there is more variability in their annual income. The range of annual income is narrower for artists, entertainment, healthcare, and homemakers, indicating less variability in their annual income.
+
+Overall, this plot gives us a good idea of the distribution of annual income for different professions, which can help us identify trends and make informed decisions.
+
+
+2nd Boxplot graph shows the relationship between spending Score Vs
+Profession.
+```{r}
+ggplot(customers,
+       aes(SpendingScore, 
+           Profession, 
+           color = Profession)) + 
+  geom_boxplot(fill ="turquoise2")
+ggsave('p5.png')
+```
+Based on the plot, it appears that the median spending score is higher for the Entertainment and Executive professions compared to the other professions. The Healthcare and Homemaker professions have the smallest interquartile range, indicating that the spending scores in those professions are relatively similar.
+
+There are also some outliers in the plot, particularly for the Entertainment, Marketing, and No profession categories, which indicates that there are some individuals in those professions who spend significantly more than the rest of the group.
+
+
+## Bar chart
+Here Bar chart Shows the relationship between Spending Score and
+Gender.
+```{r}
+ggplot(customers,
+       aes(SpendingScore, 
+           color = Gender)) + 
+  geom_bar(fill ="plum")
+ggsave('p6.png')
+```
+
+From the graph, we can observe that there are more female customers than male customers for every spending score level. The highest count of female customers is observed for the spending score level of 50, while the highest count of male customers is observed for the spending score level of 60.
+
+Overall, the graph suggests that female customers tend to spend more than male customers, as there are more female customers across all spending score levels.
+
+
+## Histogram
+Here Histogram shows the relationship between spending Score and
+Profession.
+```{r}
+ggplot(customers,
+       aes(SpendingScore, 
+           color = Profession)) + 
+  geom_histogram(fill="snow")
+ggsave('p7.png')
+
+```
+
+From the histogram, we can observe the following:
+
+•	The majority of people have a spending score in the range of 40-60.
+
+•	The highest count of people with a spending score in the range of 50-60 belongs to the healthcare and marketing professions.
+
+•	The highest count of people with a spending score in the range of 60-70 belongs to the artist and lawyer professions.
+
+•	The highest count of people with a spending score in the range of 70-80 belongs to the doctor and entertainment professions.
+
+•	The executive, homemaker, and people with no profession have a lower spending score than people in other professions.
+
+Overall, the histogram indicates that the spending scores of people in different professions vary, with doctors and people in the entertainment industry having the highest spending scores, followed by artists and lawyers. The spending scores of people in healthcare and marketing are also relatively high, while people with no profession and homemakers have a lower spending score.
+
+
+## Correlation
+1st
+correlation shows the relationship between Age and Family Size.
+```{r}
+customers <- read.csv("Customers.csv")
+cor.test(customers$Age, customers$FamilySize, method = "spearman")
+
+```
+The cor.test() function was used to calculate the Spearman's rank correlation coefficient (rho) between the variables customers$Age and customers$FamilySize. 
+
+The computed value of rho is 0.03934246, indicating a very weak positive correlation between the two variables.
+
+The p-value obtained from the test is 0.07857, which is higher than the
+typical level of significance of 0.05. 
+
+This implies that there is insufficient evidence to reject the null hypothesis that there is no correlation between the two variables. Hence, we cannot draw a conclusion that there is a statistically significant correlation between age and family size based on this analysis.
+```{r}
+cor(select(customers, Age, FamilySize))
+```
+
+The output above displays the correlation matrix for the variables Age
+and FamilySize in the customer’s dataset. 
+
+The computed correlation coefficient between Age and FamilySize is 0.03825438, which implies a very weak positive correlation between the two variables.
+
+Furthermore, the correlation coefficient between Age and itself is 1, as
+expected, since any variable has a perfect correlation with itself. 
+
+The same holds true for FamilySize and itself, which also has a correlation
+coefficient of 1.
+
+In conclusion, this output suggests that there is little to no meaningful
+correlation between Age and FamilySize in the customer’s dataset.
+```{r}
+pairs(select(customers, Age, FamilySize,SpendingScore))
+```
+From the image it is seen that there is no relation between the 3
+variables.
+
+2nd correlation exists between work experience and Family Size.
+```{r}
+customers <- read.csv("Customers.csv")
+cor.test(customers$WorkExperience, customers$FamilySize, method = "spearman")
+```
+
+This output is the result of performing a Spearman's rank correlation test between WorkExperience and FamilySize. 
+
+The correlation coefficient between the two variables is 0.01275234, indicating a very weak positive relationship. 
+The p-value of 0.5687 suggests that there is no statistically significant evidence to reject the null hypothesis of zero correlation between the two variables at the 5% significance level. 
+
+Therefore, we can conclude that there is no significant correlation between WorkExperience and FamilySize based on this test.
+```{r}
+cor(select(customers, WorkExperience, FamilySize))
+```
+This output shows the result of a Pearson's correlation coefficient calculation
+between WorkExperience and FamilySize variables in customers’ data frame. 
+
+The correlation coefficient between the two variables is 0.01187302, which indicates a very weak positive relationship. 
+
+As the correlation coefficient is close to zero, there is no significant linear correlation between the two variables. 
+
+We can conclude that there is no significant linear association between WorkExperience and FamilySize in the customer’s data frame based on this test.
+```{r}
+pairs(select(customers, WorkExperience, FamilySize,SpendingScore))
+```
+From the image it is seen that there is very week relation between the
+3 variables.
+
+## Linear Regression
+1st Linear Regression exists between the Family Size and annual
+Income.
+```{r}
+customers <- read.csv("Customers.csv")
+linear_customer <- lm(customers$FamilySize ~ customers$AnnualIncome, data = customers)
+summary(linear_customer)
+```
+
+```{r}
+ggplot(customers, aes(FamilySize, AnnualIncome)) +
+  geom_point() +
+  geom_smooth(method=lm)
+ggsave("Linear_regression1.png")
+```
+
+This output displays the outcome of a linear regression analysis between
+the FamilySize and AnnualIncome variables from
+the customers data frame. 
+
+The regression coefficient for AnnualIncome is 4.007e-06, indicating that a unit increase in AnnualIncome is associated with a 4.007e-06 increase in FamilySize. 
+
+The intercept value of the model is 3.325, which means that when AnnualIncome is zero, FamilySize is expected to be 3.325.
+
+The p-value associated with AnnualIncome is below 0.05, indicating that the coefficient is statistically significant, suggesting that there is a significant positive relationship between AnnualIncome and FamilySize. However, the multiple R-squared values of 0.00865 suggests that only 0.87% of the variance in FamilySize is explained by AnnualIncome.
+
+Overall, the results of the linear regression model suggest that
+AnnualIncome and FamilySize have a statistically
+significant positive relationship, but the model has limited explanatory
+power, explaining only a small proportion of the variation in
+FamilySize.
+
+
+2nd Linear Regression exists between the Work Experience and annual
+Income.
+```{r}
+linear_customer <- lm(customers$AnnualIncome ~ customers$WorkExperience, data = customers)
+summary(linear_customer)
+```
+```{r}
+ggplot(customers, aes(AnnualIncome, WorkExperience)) +
+  geom_point() +
+  geom_smooth(method=lm)
+ggsave("Linear_regression2.png")
+```
+This output presents the result of a linear regression model between
+AnnualIncome and WorkExperience variables in
+the customers data frame. The regression coefficient for
+WorkExperience is 1039.5, indicating that for every unit
+increase in WorkExperience, there is an increase of 1039.5
+in AnnualIncome. The intercept of the model is 106467.4,
+which suggests that when WorkExperience is zero,
+AnnualIncome is expected to be 106467.4.
+
+The p-value associated with WorkExperience is less than
+0.05, which means that the coefficient is statistically significant. This
+indicates that there is a significant positive relationship between
+WorkExperience and AnnualIncome. The
+multiple R-squared value of 0.007945 suggests that only 0.79% of the
+variability in AnnualIncome can be explained by
+WorkExperience.
+
+In summary, the linear regression model indicates that there is a
+statistically significant positive relationship between
+WorkExperience and AnnualIncome, but the
+model explains only a small proportion of the variation in
+AnnualIncome.
+
+
+## T-Test
+1st t-test exists between male and female spending scores.
+```{r}
+customers <- read.csv("customers.csv")
+males <- subset(customers, Gender == "Male")
+females <- subset(customers, Gender == "Female")
+t.test(males$SpendingScore, females$SpendingScore, var.equal = FALSE)
+```
+
+The output shows the results of a two-sample t-test to compare the
+spending scores between males and females. 
+
+The null hypothesis is that there is no difference in the mean spending scores between males and females. 
+
+The alternative hypothesis is that the mean spending scores are different for males and females.
+
+The t-statistic is -0.023614 and the degrees of freedom are 1756.4. 
+
+The p-value is 0.9812, which is greater than the significance level of 0.05.
+
+Therefore, we fail to reject the null hypothesis and conclude that there
+is no significant difference in the mean spending scores between males
+and females. 
+
+The 95% confidence interval for the difference in means is
+[-2.520631, 2.460656], which contains zero, further supporting the null
+hypothesis. The sample means for males and females are 50.94472 and
+50.97470, respectively.
+
+2nd t-test exists between male and female spending scores.
+```{r}
+Age_A <- subset(customers, customers$Age > 50)
+Age_B <- subset(customers, customers$Age <= 50)
+t.test(Age_A$SpendingScore, Age_B$SpendingScore, var.equal = FALSE)
+
+```
+
+This output shows the results of a two-sample t-test to compare the
+spending scores between two groups labeled Age_A and Age_B. 
+
+The null hypothesis is that there is no difference in the mean spending scores
+between these two groups. 
+
+The alternative hypothesis is that the mean spending scores are different between the two groups.
+
+The t-statistic is -1.2209 and the degrees of freedom are 1990.7. 
+
+The pvalue is 0.2223, which is greater than the significance level of 0.05.
+
+Therefore, we fail to reject the null hypothesis and conclude that there
+is no significant difference in the mean spending scores between Age_A
+and Age_B. 
+
+The 95% confidence interval for the difference in means is
+[-3.9743111, 0.9246314], which contains zero, further supporting the
+null hypothesis.
+
+The sample means for Age_A and Age_B are 50.16806
+and 51.69290, respectively.
